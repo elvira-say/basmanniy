@@ -121,9 +121,9 @@
     },
     riddle: function () {
       var p = P[S.i], r = p.riddle;
-      return '<section class="screen">' + header(S.i) + '<span class="kicker">Загадка на месте</span>' +
+      return '<section class="screen">' + header(S.i) + (p.showDetail ? fig(p.img.detail) : '') + '<span class="kicker">Загадка на месте</span>' +
         '<p style="font-size:18px">' + r.q + '</p>' + optionsHtml(r, 'r') +
-        '<div id="hint" class="hidden">' + fig(p.img.detail, 'tall') + '</div>' +
+        (p.showDetail ? '' : '<div id="hint" class="hidden">' + fig(p.img.detail, 'tall') + '</div>') +
         '<p id="msg" class="after hidden"></p>' +
         '<div class="actions"><button class="btn ghost hidden" id="hintbtn" data-act="hint">Показать подсказку</button>' +
         '<button class="btn hidden" id="next" data-act="toquiz">Дальше: квиз</button></div></section>';
@@ -133,7 +133,7 @@
       return '<section class="screen">' + header(S.i) + fig(im) + '<span class="kicker">Квиз-догадка</span>' +
         '<p style="font-size:18px">' + q.q + '</p>' + optionsHtml(q, 'q') +
         '<p id="msg" class="after hidden"></p>' +
-        '<div class="actions"><button class="btn hidden" id="next" data-act="tostory">' + (S.i === FIN ? 'К финалу' : 'Узнать историю дома') + '</button></div></section>';
+        '<div class="actions"><button class="btn hidden" id="next" data-act="tostory">' + (S.i === FIN ? 'К финалу' : 'Узнать историю') + '</button></div></section>';
     },
     story: function () {
       var p = P[S.i], hasPair = p.img.before && p.img.now;
@@ -211,8 +211,8 @@
       btn.classList.add('wrong'); btn.disabled = true; tries++;
       if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
       if (kind === 'r') {
-        msg.innerHTML = 'Не совсем. Присмотритесь ещё раз — или возьмите подсказку.'; msg.classList.remove('hidden');
-        var hb2 = document.getElementById('hintbtn'); if (hb2 && P[S.i].img.detail) hb2.classList.remove('hidden');
+        msg.innerHTML = P[S.i].showDetail ? 'Не совсем. Присмотритесь ещё раз.' : 'Не совсем. Присмотритесь ещё раз — или возьмите подсказку.'; msg.classList.remove('hidden');
+        var hb2 = document.getElementById('hintbtn'); if (hb2 && P[S.i].img.detail && !P[S.i].showDetail) hb2.classList.remove('hidden');
       } else {
         // в квизе показываем ответ сразу: это догадка, а не экзамен
         all.forEach(function (b) { b.disabled = true; if (+b.getAttribute('data-opt') === o.answer) { b.classList.add('right'); b.querySelector('span').innerHTML = check; } });
