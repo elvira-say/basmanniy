@@ -298,6 +298,7 @@
       case 'tobridge': markDone(); go('bridge'); break;
       case 'nextpoint': go('approach', S.i + 1); break;
       case 'tocard': markDone(); if (!S.finished) { S.finished = true; count('finish'); } go('card'); break;
+      case 'back': back(); break;
       case 'savecard': saveCard(); break;
       case 'share': shareGame(); break;
       case 'petition': openLink(CFG.petition); break;
@@ -311,6 +312,14 @@
     app.innerHTML = fn();
     if (tg && tg.BackButton) { if (history.length) tg.BackButton.show(); else tg.BackButton.hide(); }
     var h = app.querySelector('h1,h2'); if (h) { h.setAttribute('tabindex', '-1'); }
+    // кнопка «Назад» в самом приложении — на любом экране, кроме первого
+    if (history.length) {
+      var sec = app.querySelector('.screen'), b = document.createElement('button');
+      b.className = 'linkbtn'; b.setAttribute('data-act', 'back'); b.textContent = 'Назад';
+      var row = sec.querySelector('.top .toprow');
+      if (row) row.insertBefore(b, row.firstChild);
+      else { var wrap = document.createElement('div'); wrap.className = 'toprow'; wrap.appendChild(b); sec.insertBefore(wrap, sec.firstChild); }
+    }
   }
 
   // ---------- старт ----------
